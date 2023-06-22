@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Sign Up  </title>
+
+    <!-- Font Icon -->
+    <link rel="stylesheet" href="fonts/material-icon/css/material-design-iconic-font.min.css">
+
+    <!-- Main css -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div class="main">
+
+        <!-- Sign up form -->
+        <section class="signup">
+            <div class="container">
+                <div class="signup-content">
+                    <div class="signup-form">
+                        <h2 class="form-title">Sign up</h2>
+                        <form method="POST" class="register-form" id="register-form">
+                            <div class="form-group">
+                                <label for="name"><i class="zmdi zmdi-account material-icons-name"></i></label>
+                                <input type="text" name="name" id="name" placeholder="Your Name"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="email"><i class="zmdi zmdi-email"></i></label>
+                                <input type="email" name="email" id="email" placeholder="Your Email"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="pass"><i class="zmdi zmdi-lock"></i></label>
+                                <input type="password" name="pass" id="pass" placeholder="Password"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="re-pass"><i class="zmdi zmdi-lock-outline"></i></label>
+                                <input type="password" name="re_pass" id="re_pass" placeholder="Repeat your password"/>
+                            </div>
+                            <div class="form-group">
+                                <input type="checkbox" name="agree-term" id="agree-term" class="agree-term" />
+                                <label for="agree-term" class="label-agree-term"><span><span></span></span>I agree all statements in  <a href="#" class="term-service">Terms of service</a></label>
+                            </div>
+                            <div class="form-group form-button">
+                                <input type="submit" name="signup" id="signup" class="form-submit" value="Register"/>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="signup-image">
+                        <figure><img src="images/signup-image.jpg" alt="sing up image"></figure>
+                        <a href="#" class="signup-image-link">I am already member</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sing in  Form -->
+        <section class="sign-in">
+            <div class="container">
+                <div class="signin-content">
+                    <div class="signin-image">
+                        <figure><img src="images/signin-image.jpg" alt="sing up image"></figure>
+                        <a href="#" class="signup-image-link">Create an account</a>
+                    </div>
+
+                    <div class="signin-form">
+                        <h2 class="form-title">Sign up</h2>
+                        <form method="POST" class="register-form" id="login-form">
+                            <div class="form-group">
+                                <label for="your_name"><i class="zmdi zmdi-account material-icons-name"></i></label>
+                                <input type="text" name="your_name" id="your_name" placeholder="Your Name"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="your_pass"><i class="zmdi zmdi-lock"></i></label>
+                                <input type="password" name="your_pass" id="your_pass" placeholder="Password"/>
+                            </div>
+                            <div class="form-group">
+                                <input type="checkbox" name="remember-me" id="remember-me" class="agree-term" />
+                                <label for="remember-me" class="label-agree-term"><span><span></span></span>Remember me</label>
+                            </div>
+                            <div class="form-group form-button">
+                                <input type="submit" name="signin" id="signin" class="form-submit" value="Log in"/>
+                            </div>
+                        </form>
+                        <div class="social-login">
+                            <span class="social-label">Or login with</span>
+                            <ul class="socials">
+                                <li><a href="#"><i class="display-flex-center zmdi zmdi-facebook"></i></a></li>
+                                <li><a href="#"><i class="display-flex-center zmdi zmdi-google"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Add a message container -->
+<div id="message-container"></div>
+
+<!-- ... Rest of your HTML code ... -->
+
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+  import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyAcpP-w5FH2sOqMPADqsBAe3bZpPUFgF7A",
+    authDomain: "auth-app-4399a.firebaseapp.com",
+    databaseURL: "https://auth-app-4399a-default-rtdb.firebaseio.com",
+    projectId: "auth-app-4399a",
+    storageBucket: "auth-app-4399a.appspot.com",
+    messagingSenderId: "1039233456147",
+    appId: "1:1039233456147:web:8135a5f09cbfc9c2fa47e6"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const database = getDatabase(app);
+  const auth = getAuth(app);
+
+  // User Registration
+  const registerForm = document.getElementById('register-form');
+  registerForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = registerForm.name.value;
+    const email = registerForm.email.value;
+    const password = registerForm.pass.value;
+
+    // Firebase User Registration Logic
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // User registered successfully
+        const user = userCredential.user;
+        const userId = user.uid;
+        // Save additional user data to the Realtime Database
+        set(ref(database, 'users/' + userId), {
+          name: name,
+          email: email
+        });
+        // Show success message
+        showMessage('Registration successful!');
+        // Additional actions after successful registration (e.g., redirect)
+      })
+      .catch((error) => {
+        // Handle registration error
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // Show error message
+        showMessage(errorMessage);
+        // Handle error and display it to the user
+      });
+  });
+
+  // User Login
+  const loginForm = document.getElementById('login-form');
+  loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = loginForm.your_name.value;
+    const password = loginForm.your_pass.value;
+
+    // Firebase User Login Logic
+    signInWithEmailAndPassword(auth, name, password)
+      .then((userCredential) => {
+        // User logged in successfully
+        const user = userCredential.user;
+        // Show success message
+        showMessage('Login successful!');
+        // Additional actions after successful login (e.g., redirect)
+      })
+      .catch((error) => {
+        // Handle login error
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // Show error message
+        showMessage(errorMessage);
+        // Handle error and display it to the user
+      });
+  });
+
+  // Function to show a message in the message container
+  function showMessage(message) {
+    const messageContainer = document.getElementById('message-container');
+    messageContainer.textContent = message;
+  }
+</script>
+
+      
+      
+      <!-- JS -->
+      <script src="vendor/jquery/jquery.min.js"></script>
+      <script src="js/main.js"></script>
+      </body>
+      </html>
+      
